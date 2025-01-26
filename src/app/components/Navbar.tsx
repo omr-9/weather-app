@@ -1,7 +1,7 @@
-
 import { BsFillCloudSunFill } from "react-icons/bs";
 import { MdMyLocation, MdOutlineLocationOn } from "react-icons/md";
 import DarkModeSwitch from "./DarkModeSwitch";
+import SearchBox from "./SearchBox";
 
 const Navbar = () => {
   return (
@@ -24,7 +24,7 @@ const Navbar = () => {
      </div>
      <div className="relative hidden sm:flex">
      
-     SearchBox
+     <SearchBox />
      </div>
      <DarkModeSwitch />
     </section>
