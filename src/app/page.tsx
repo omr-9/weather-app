@@ -1,6 +1,5 @@
 'use client'
 import { useQuery } from "react-query";
-import Navbar from "./components/Navbar";
 import axios from "axios";
 import TodayData from "./components/TodayData";
 import DaysForcast from "./components/DaysForcast";
@@ -8,15 +7,24 @@ import { format } from "date-fns";
 import { fromUnixTime, parseISO } from "date-fns";
 import { metersToKilometers } from "@/lib/metersToKilometers";
 import { convertWindSpeed } from "@/lib/convertWindSpeed";
+import { Navbar } from "./components/Navbar";
+import { useAtom } from "jotai";
+import { locationCityAtom, placeAtom } from "./atom";
+import { useEffect } from "react";
 
 
 export default function Home() {
-  const {data, isLoading, error} = useQuery("repoData", async () => {
+  const [place, setPlace ]= useAtom(placeAtom)
+  const [loadingCity, setLoadingCity] = useAtom(locationCityAtom)
+  const {data, isLoading, error,refetch} = useQuery("repoData", async () => {
     const {data} = await axios.get(
-      `https://api.openweathermap.org/data/2.5/forecast?q=Cairo&appid=${process.env.NEXT_PUBLIC_API_KEY}&cnt=80`
+      `https://api.openweathermap.org/data/2.5/forecast?q=${place}&appid=${process.env.NEXT_PUBLIC_API_KEY}&cnt=80`
     );
     return data;
   });
+  useEffect(() => {
+    refetch();
+  },[place,refetch])
   if (isLoading)
     return (
       <div className="flex items-center justify-center min-h-screen ">
@@ -47,10 +55,10 @@ export default function Home() {
     }, []);
   return (
     <div className="flex flex-col min-h-screen gap-4 bg-gray-50 dark:bg-gray-900">
-      <Navbar />
+      <Navbar location={data.city.name} />
       <main className="max-w-7xl mx-auto px-3 w-full flex flex-col gap-10 pb-10 pt-4">
 
-      <TodayData loadingCity={isLoading} data={data}/>
+      <TodayData loadingCity={loadingCity} data={data}/>
       <section className="flex w-full flex-col gap-4">
           <p className="text-2xl font-semibold">{daysForcast.length}-Day Forecast </p>
           {daysForcast.map((day: any, i: number) => {
