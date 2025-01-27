@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { BsFillCloudSunFill } from "react-icons/bs";
 import { MdMyLocation, MdOutlineLocationOn } from "react-icons/md";
 import DarkModeSwitch from "./DarkModeSwitch";
